@@ -11,6 +11,8 @@ import android.view.animation.RotateAnimation;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import static java.util.Calendar.DAY_OF_WEEK;
+
 public class MainActivity extends AppCompatActivity implements SensorEventListener{
 
 
@@ -67,7 +69,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                 float orientation[] = new float[3];
                 SensorManager.getOrientation(R,orientation);
                 azimuth = (float)Math.toDegrees(orientation[0]);
-                azimuth = (azimuth+180)%360;
+                azimuth = (azimuth+360)%360;
 
                 //
                 Animation anim = new RotateAnimation(-currentAzimuth, -azimuth,
@@ -85,8 +87,8 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
             }
 
         }
-        TextView tv = findViewById(R.id.textView2);
-        tv.setText("test:"+(int) azimuth);
+       /* TextView tv = findViewById(R.id.textView2);
+        tv.setText("test:"+(int) azimuth);*/
     }
 
     @Override
