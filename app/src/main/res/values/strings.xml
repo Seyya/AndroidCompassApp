@@ -1,3 +1,17 @@
 <resources>
     <string name="app_name">Android Compass App</string>
+    <string name="rotation">Rotation in degrees</string>
+    <string name="rotation_direction">Direction </string>
+    <string name="latitude_message">Latitude: </string>
+    <string name="longitude_message">Longitude: </string>
+    <string name="uncorrect_location_message">Unable to find correct location</string>
+    <string name="north">N</string>
+    <string name="northwest">NW</string>
+    <string name="west">W</string>
+    <string name="southwest">SW</string>
+    <string name="south">S</string>
+    <string name="southeast">SE</string>
+    <string name="east">E</string>
+    <string name="northeast">NE</string>
+    <string name="degrees_symbol">°</string>
 </resources>

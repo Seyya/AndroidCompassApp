@@ -1,5 +1,6 @@
 package com.example.bruger.androidcompassapp;
 //update
+
 import android.Manifest;
 import android.content.Context;
 import android.content.pm.PackageManager;
@@ -9,19 +10,16 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.location.Location;
 import android.location.LocationManager;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.view.animation.Animation;
 import android.view.animation.RotateAnimation;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import static java.util.Calendar.DAY_OF_WEEK;
-
-public class MainActivity extends AppCompatActivity implements SensorEventListener{
+public class MainActivity extends AppCompatActivity implements SensorEventListener {
     static final int REQUEST_LOCATION = 1;
     LocationManager locationManager;
 
@@ -37,53 +35,53 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        locationManager = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
+        locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         getLocation();
 
         imageView = findViewById(R.id.compass);
-        mSensorManager = (SensorManager)getSystemService(SENSOR_SERVICE);
+        mSensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
     }
 
     void getLocation() {
-        if(ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
-                != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission
-                (this,Manifest.permission.ACCESS_COARSE_LOCATION)
-                != PackageManager.PERMISSION_GRANTED){
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_LOCATION);
-        } else {
-            Location location = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
+                this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
 
-            if(location != null){
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_LOCATION);
+
+        } else {
+            Location location = locationManager.getLastKnownLocation(locationManager.NETWORK_PROVIDER);
+            if (location != null) {
                 double latitude = location.getLatitude();
                 double longitude = location.getLongitude();
 
-                ((EditText)findViewById(R.id.etLocationLat)).setText("Latitude" + latitude);
-                ((EditText)findViewById(R.id.etLocationLong)).setText("Longitude" + longitude);
+                ((TextView) findViewById(R.id.etLocationLat)).setText(getString(R.string.latitude_message) + latitude);
+                ((TextView) findViewById(R.id.etLocationLong)).setText(getString(R.string.longitude_message) + longitude);
             } else {
-                ((EditText)findViewById(R.id.etLocationLat)).setText("Unable to find correct location");
-                ((EditText)findViewById(R.id.etLocationLong)).setText("Unable to find correct location");
+                ((TextView) findViewById(R.id.etLocationLat)).setText(R.string.uncorrect_location_message);
+                ((TextView) findViewById(R.id.etLocationLong)).setText(R.string.uncorrect_location_message);
             }
         }
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults){
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 
-        switch (requestCode){
+        switch (requestCode) {
             case REQUEST_LOCATION:
-            getLocation();
-            break;
+                getLocation();
+                break;
         }
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        mSensorManager.registerListener(this,mSensorManager.getDefaultSensor
-                (Sensor.TYPE_MAGNETIC_FIELD),SensorManager.SENSOR_DELAY_GAME);
-        mSensorManager.registerListener(this,mSensorManager.getDefaultSensor
-                (Sensor.TYPE_ACCELEROMETER),SensorManager.SENSOR_DELAY_GAME);
+        mSensorManager.registerListener(this, mSensorManager.getDefaultSensor
+                (Sensor.TYPE_MAGNETIC_FIELD), SensorManager.SENSOR_DELAY_GAME);
+        mSensorManager.registerListener(this, mSensorManager.getDefaultSensor
+                (Sensor.TYPE_ACCELEROMETER), SensorManager.SENSOR_DELAY_GAME);
 
 
     }
@@ -97,25 +95,25 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     @Override
     public void onSensorChanged(SensorEvent sensorEvent) {
         final float alpha = 0.97f;
-        synchronized (this){
-            if(sensorEvent.sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
-                mGravity[0] = alpha*mGravity[0]+(1-alpha)*sensorEvent.values[0];
-                mGravity[1] = alpha*mGravity[1]+(1-alpha)*sensorEvent.values[1];
-                mGravity[2] = alpha*mGravity[2]+(1-alpha)*sensorEvent.values[2];
+        synchronized (this) {
+            if (sensorEvent.sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
+                mGravity[0] = alpha * mGravity[0] + (1 - alpha) * sensorEvent.values[0];
+                mGravity[1] = alpha * mGravity[1] + (1 - alpha) * sensorEvent.values[1];
+                mGravity[2] = alpha * mGravity[2] + (1 - alpha) * sensorEvent.values[2];
             }
-            if(sensorEvent.sensor.getType() == Sensor.TYPE_MAGNETIC_FIELD) {
-                mGeomagnetic[0] = alpha*mGeomagnetic[0]+(1-alpha)*sensorEvent.values[0];
-                mGeomagnetic[1] = alpha*mGeomagnetic[1]+(1-alpha)*sensorEvent.values[1];
-                mGeomagnetic[2] = alpha*mGeomagnetic[2]+(1-alpha)*sensorEvent.values[2];
+            if (sensorEvent.sensor.getType() == Sensor.TYPE_MAGNETIC_FIELD) {
+                mGeomagnetic[0] = alpha * mGeomagnetic[0] + (1 - alpha) * sensorEvent.values[0];
+                mGeomagnetic[1] = alpha * mGeomagnetic[1] + (1 - alpha) * sensorEvent.values[1];
+                mGeomagnetic[2] = alpha * mGeomagnetic[2] + (1 - alpha) * sensorEvent.values[2];
             }
             float R[] = new float[9];
             float I[] = new float[9];
-            boolean success = SensorManager.getRotationMatrix(R,I,mGravity,mGeomagnetic);
-            if(success){
+            boolean success = SensorManager.getRotationMatrix(R, I, mGravity, mGeomagnetic);
+            if (success) {
                 float orientation[] = new float[3];
-                SensorManager.getOrientation(R,orientation);
-                azimuth = (float)Math.toDegrees(orientation[0]);
-                azimuth = (azimuth+360)%360;
+                SensorManager.getOrientation(R, orientation);
+                azimuth = (float) Math.toDegrees(orientation[0]);
+                azimuth = (azimuth + 360) % 360;
 
                 //
                 Animation anim = new RotateAnimation(-currentAzimuth, -azimuth,
@@ -134,28 +132,28 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
         }
         TextView direction = findViewById(R.id.textView3);
-        if(azimuth >= 350 || azimuth <= 10){
-            direction.setText("N");
-        } else if(azimuth < 350 && azimuth > 280) {
-            direction.setText("NW");
-        } else if(azimuth <= 280 && azimuth > 260) {
-            direction.setText("W");
-        } else if(azimuth <= 260 && azimuth > 190) {
-            direction.setText("SW");
-        } else if(azimuth <= 190 && azimuth > 170) {
-            direction.setText("S");
-        } else if(azimuth <= 170 && azimuth > 100) {
-            direction.setText("SE");
-        } else if(azimuth <= 100 && azimuth > 80) {
-            direction.setText("E");
-        } else if(azimuth <= 80 && azimuth > 10) {
-            direction.setText("NE");
+        if (azimuth >= 350 || azimuth <= 10) {
+
+            direction.setText(R.string.north);
+        } else if (azimuth < 350 && azimuth > 280) {
+            direction.setText(R.string.northwest);
+        } else if (azimuth <= 280 && azimuth > 260) {
+            direction.setText(R.string.west);
+        } else if (azimuth <= 260 && azimuth > 190) {
+            direction.setText(R.string.southwest);
+        } else if (azimuth <= 190 && azimuth > 170) {
+            direction.setText(R.string.south);
+        } else if (azimuth <= 170 && azimuth > 100) {
+            direction.setText(R.string.southeast);
+        } else if (azimuth <= 100 && azimuth > 80) {
+            direction.setText(R.string.east);
+        } else if (azimuth <= 80 && azimuth > 10) {
+            direction.setText(R.string.northeast);
         }
 
 
-
         TextView degrees = findViewById(R.id.textView2);
-        degrees.setText((int) azimuth + "°");
+        degrees.setText((int) azimuth + getString(R.string.degrees_symbol));
 
     }
 
@@ -163,8 +161,6 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     public void onAccuracyChanged(Sensor sensor, int i) {
 
     }
-
-
 
 
 }

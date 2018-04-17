@@ -15,7 +15,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"/>
 
     <TextView
         android:id="@+id/textView2"
@@ -25,7 +25,8 @@
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
-        android:text="rotation in degrees"
+        android:text=""
+        android:hint="@string/rotation"
         android:textSize="24sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -44,7 +45,8 @@
         android:layout_marginTop="8dp"
         android:layout_marginRight="8dp"
         android:layout_marginLeft="8dp"
-        android:text="direction of rotation"
+        android:text=""
+        android:hint="@string/rotation_direction"
         android:textSize="24sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -53,7 +55,7 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.046" />
 
-    <EditText
+    <TextView
         android:id="@+id/etLocationLat"
         android:layout_width="296dp"
         android:layout_height="wrap_content"
@@ -64,15 +66,14 @@
         android:layout_marginLeft="8dp"
         android:layout_marginTop="404dp"
         android:ems="10"
-        android:hint="Latitude"
-        android:inputType="textPersonName"
+        android:hint="@string/latitude_message"
         app:layout_constraintBottom_toTopOf="@+id/etLocationLong"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <EditText
+    <TextView
         android:id="@+id/etLocationLong"
         android:layout_width="300dp"
         android:layout_height="wrap_content"
@@ -81,8 +82,7 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:ems="10"
-        android:hint="Longitude"
-        android:inputType="textPersonName"
+        android:hint="@string/longitude_message"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.052"
