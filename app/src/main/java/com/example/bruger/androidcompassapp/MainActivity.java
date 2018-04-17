@@ -1,20 +1,29 @@
 package com.example.bruger.androidcompassapp;
 
+import android.Manifest;
+import android.content.Context;
+import android.content.pm.PackageManager;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.location.Location;
+import android.location.LocationManager;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.animation.Animation;
 import android.view.animation.RotateAnimation;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import static java.util.Calendar.DAY_OF_WEEK;
 
 public class MainActivity extends AppCompatActivity implements SensorEventListener{
-
+    static final int REQUEST_LOCATION = 1;
+    LocationManager locationManager;
 
     private ImageView imageView;
     private float[] mGravity = new float[3];
@@ -28,9 +37,44 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        locationManager = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
+        getLocation();
 
         imageView = findViewById(R.id.compass);
         mSensorManager = (SensorManager)getSystemService(SENSOR_SERVICE);
+    }
+
+    void getLocation() {
+        if(ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission
+                (this,Manifest.permission.ACCESS_COARSE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED){
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_LOCATION);
+        } else {
+            Location location = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+
+            if(location != null){
+                double latitude = location.getLatitude();
+                double longitude = location.getLongitude();
+
+                ((EditText)findViewById(R.id.etLocationLat)).setText("Latitude" + latitude);
+                ((EditText)findViewById(R.id.etLocationLong)).setText("Longitude" + longitude);
+            } else {
+                ((EditText)findViewById(R.id.etLocationLat)).setText("Unable to find correct location");
+                ((EditText)findViewById(R.id.etLocationLong)).setText("Unable to find correct location");
+            }
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults){
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        switch (requestCode){
+            case REQUEST_LOCATION:
+            getLocation();
+            break;
+        }
     }
 
     @Override
@@ -40,6 +84,8 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                 (Sensor.TYPE_MAGNETIC_FIELD),SensorManager.SENSOR_DELAY_GAME);
         mSensorManager.registerListener(this,mSensorManager.getDefaultSensor
                 (Sensor.TYPE_ACCELEROMETER),SensorManager.SENSOR_DELAY_GAME);
+
+
     }
 
     @Override
@@ -87,8 +133,30 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
             }
 
         }
-       /* TextView tv = findViewById(R.id.textView2);
-        tv.setText("test:"+(int) azimuth);*/
+        TextView direction = findViewById(R.id.textView3);
+        if(azimuth >= 350 || azimuth <= 10){
+            direction.setText("N");
+        } else if(azimuth < 350 && azimuth > 280) {
+            direction.setText("NW");
+        } else if(azimuth <= 280 && azimuth > 260) {
+            direction.setText("W");
+        } else if(azimuth <= 260 && azimuth > 190) {
+            direction.setText("SW");
+        } else if(azimuth <= 190 && azimuth > 170) {
+            direction.setText("S");
+        } else if(azimuth <= 170 && azimuth > 100) {
+            direction.setText("SE");
+        } else if(azimuth <= 100 && azimuth > 80) {
+            direction.setText("E");
+        } else if(azimuth <= 80 && azimuth > 10) {
+            direction.setText("NE");
+        }
+
+
+
+        TextView degrees = findViewById(R.id.textView2);
+        degrees.setText((int) azimuth + "°");
+
     }
 
     @Override
