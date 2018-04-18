@@ -19,6 +19,7 @@ import android.view.animation.RotateAnimation;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+//LATITUDE AND LONGITUDE ONLY WORKS ON ANDROID DEVICES NOT EMULATORS
 public class MainActivity extends AppCompatActivity implements SensorEventListener {
     static final int REQUEST_LOCATION = 1;                                                          //Variable to be able to request a location from location class
     LocationManager locationManager;                                                                //declaring a variable of the type LocationManager
@@ -41,9 +42,11 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         imageView = findViewById(R.id.compass);                                                     //Defining the variable imageView from the R file, to give it the right ID
         mSensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);                          //Determining if the sensor is present and available to be used
     }
+
     @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {   //method creating in order to get results after being granted permission
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {                                                    //method creating in order to get results after being granted permission
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);                   //LATITUDE AND LONGITUDE ONLY WORKS ON ANDROID DEVICES NOT EMULATORS
 
         switch (requestCode) {                                                                      //Variable for the switch case
             case REQUEST_LOCATION:                                                                  //Only does it if it is equal to the request_location
@@ -51,28 +54,37 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                 break;                                                                              //Ends the switch case
         }
     }
-    void getLocation() {
-        if ((ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) //if statement to check if the app has permission to use location from the mobile
-                != PackageManager.PERMISSION_GRANTED) && (ActivityCompat.checkSelfPermission(
-                this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED)) {
 
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_LOCATION); //If it does not, it will request access to the location
+    void getLocation() {
+        if ((ActivityCompat.checkSelfPermission(this, Manifest.permission.                  //if statement to check if the app has permission to use location from the mobile
+                ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) && (ActivityCompat.
+                checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) !=
+                PackageManager.PERMISSION_GRANTED)) {
+
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.        //If it does not, it will request access to the location
+                    ACCESS_FINE_LOCATION}, REQUEST_LOCATION);
 
         } else {
-            Location location = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER); //if it does, it will get the latitude and longitude variable from locattion service
+            Location location = locationManager.getLastKnownLocation(LocationManager.               //if it does, it will get the latitude and longitude variable from locattion service
+                    NETWORK_PROVIDER);
             if (location != null) {
                 double latitude = location.getLatitude();                                           //variable to store latitude
                 double longitude = location.getLongitude();                                         //variable to store longitude
 
-                ((TextView) findViewById(R.id.etLocationLat)).setText(getString(R.string.latitude_message) + latitude);     //setting a certain textview with casting to a R string and the latitude variable
-                ((TextView) findViewById(R.id.etLocationLong)).setText(getString(R.string.longitude_message) + longitude);  //setting a certain textview with casting to a R string and the longitude variable
+                ((TextView) findViewById(R.id.etLocationLat)).setText(
+                        getString(R.string.latitude_message) + latitude);                           //setting a certain textview with casting to a R string and the latitude variable
+
+                ((TextView) findViewById(R.id.etLocationLong)).setText
+                        (getString(R.string.longitude_message) + longitude);                        //setting a certain textview with casting to a R string and the longitude variable
+
             } else {
-                ((TextView) findViewById(R.id.etLocationLat)).setText(R.string.uncorrect_location_message);                 //If the device does not grant access it will display an error message in the textView
-                ((TextView) findViewById(R.id.etLocationLong)).setText(R.string.uncorrect_location_message);                //If the device does not grant access it will display an error message in the textView
+                ((TextView) findViewById(R.id.etLocationLat)).setText                               //If the device does not grant access it will display an error message in the textView
+                        (R.string.uncorrect_location_message);
+                ((TextView) findViewById(R.id.etLocationLong)).setText                              //If the device does not grant access it will display an error message in the textView
+                        (R.string.uncorrect_location_message);
             }
         }
     }
-
 
 
     @Override
