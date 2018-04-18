@@ -81,7 +81,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         mSensorManager.registerListener(this, mSensorManager.getDefaultSensor
                 (Sensor.TYPE_MAGNETIC_FIELD), SensorManager.SENSOR_DELAY_GAME);
         mSensorManager.registerListener(this, mSensorManager.getDefaultSensor
-                (Sensor.TYPE_ACCELEROMETER), SensorManager.SENSOR_DELAY_GAME);
+                (Sensor.TYPE_ACCELEROMETER), SensorManager.SENSOR_DELAY_UI);
 
 
     }
