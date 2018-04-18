@@ -91,9 +91,9 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     protected void onResume() {
         super.onResume();
         mSensorManager.registerListener(this, mSensorManager.getDefaultSensor               //Registers listeners to be able to update the magnetic field sensor when being inside the app
-                (Sensor.TYPE_MAGNETIC_FIELD), SensorManager.SENSOR_DELAY_GAME);
+                (Sensor.TYPE_MAGNETIC_FIELD), SensorManager.SENSOR_DELAY_GAME);                     //How fast the manager should update, set to GAME for the magnetic field sensor
         mSensorManager.registerListener(this, mSensorManager.getDefaultSensor               //Registers listeners to be able to update the accelerometer sensor when being inside the app
-                (Sensor.TYPE_ACCELEROMETER), SensorManager.SENSOR_DELAY_UI);
+                (Sensor.TYPE_ACCELEROMETER), SensorManager.SENSOR_DELAY_UI);                        //How fast the manager should update, set to UI for the acclerometer
 
 
     }
