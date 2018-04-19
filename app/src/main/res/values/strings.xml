@@ -14,4 +14,5 @@
     <string name="east">E</string>
     <string name="northeast">NE</string>
     <string name="degrees_symbol">°</string>
+    <string name="quatation_mark">"</string>
 </resources>

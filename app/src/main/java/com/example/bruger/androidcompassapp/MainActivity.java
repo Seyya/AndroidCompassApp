@@ -44,6 +44,15 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+        mSensorManager.registerListener(this, mSensorManager.getDefaultSensor               //Registers listeners to be able to update the magnetic field sensor when being inside the app
+                (Sensor.TYPE_MAGNETIC_FIELD), SensorManager.SENSOR_DELAY_GAME);                     //How fast the manager should update, set to GAME for the magnetic field sensor
+        mSensorManager.registerListener(this, mSensorManager.getDefaultSensor               //Registers listeners to be able to update the accelerometer sensor when being inside the app
+                (Sensor.TYPE_ACCELEROMETER), SensorManager.SENSOR_DELAY_UI);                        //How fast the manager should update, set to UI for the acclerometer
+    }
+
+    @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
                                            @NonNull int[] grantResults) {                                                    //method creating in order to get results after being granted permission
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);                   //LATITUDE AND LONGITUDE ONLY WORKS ON ANDROID DEVICES NOT EMULATORS
@@ -56,7 +65,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     }
 
     void getLocation() {
-        if ((ActivityCompat.checkSelfPermission(this, Manifest.permission.                  //if statement to check if the app has permission to use location from the mobile
+        if ((ActivityCompat.checkSelfPermission(this, Manifest.permission.                   //if statement to check if the app has permission to use location from the mobile
                 ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) && (ActivityCompat.
                 checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) !=
                 PackageManager.PERMISSION_GRANTED)) {
@@ -70,32 +79,47 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
             if (location != null) {
                 double latitude = location.getLatitude();                                           //variable to store latitude
                 double longitude = location.getLongitude();                                         //variable to store longitude
+                String stringLatitude = latitude + "";
+                String stringLongitude = longitude + "";
+                String finalStringLatitude = stringLatitude.substring(0,2) + getString(R.string.degrees_symbol)
+                        + stringLatitude.substring(2,4) + "'" + stringLatitude.substring(4,6) + getString(R.string.quatation_mark);
+                String finalStringLongitude = stringLatitude.substring(0,2) + getString(R.string.degrees_symbol)
+                        + stringLatitude.substring(2,4) + "'" + stringLatitude.substring(4,6) + getString(R.string.quatation_mark);
+                /*((TextView) findViewById(R.id.etLocationLat)).setText(
+                        getString(R.string.latitude_message) + latitude);
+                ((TextView) findViewById(R.id.etLocationLong)).setText(
+                        getString(R.string.latitude_message) + longitude);*/
 
-                ((TextView) findViewById(R.id.etLocationLat)).setText(
-                        getString(R.string.latitude_message) + latitude);                           //setting a certain textview with casting to a R string and the latitude variable
+                if (latitude > 0 && latitude <= 90 && longitude > 0 && longitude <= 180) {
+                    ((TextView) findViewById(R.id.etLocationLat)).setText(
+                            getString(R.string.latitude_message) + getString(R.string.north) +      //setting a certain TextXiew with casting to a R string and the latitude variable
+                                    finalStringLatitude);
+                    ((TextView) findViewById(R.id.etLocationLong)).setText                          //setting a certain TextView with casting to a R string and the longitude variable
+                            (getString(R.string.longitude_message) + getString(R.string.east) +
+                                    finalStringLongitude);
 
-                ((TextView) findViewById(R.id.etLocationLong)).setText
-                        (getString(R.string.longitude_message) + longitude);                        //setting a certain textview with casting to a R string and the longitude variable
+                } else if (latitude > 0 && latitude <= -90 && longitude > 0 && longitude < -180) {
+                    ((TextView) findViewById(R.id.etLocationLat)).setText(
+                            getString(R.string.latitude_message) + getString(R.string.south) +
+                                    finalStringLatitude);
+                    ((TextView) findViewById(R.id.etLocationLat)).setText(
+                            getString(R.string.longitude_message) + getString(R.string.west) +
+                                    finalStringLongitude);
 
-            } else {
-                ((TextView) findViewById(R.id.etLocationLat)).setText                               //If the device does not grant access it will display an error message in the textView
-                        (R.string.uncorrect_location_message);
-                ((TextView) findViewById(R.id.etLocationLong)).setText                              //If the device does not grant access it will display an error message in the textView
-                        (R.string.uncorrect_location_message);
+                } else if (latitude == 0 || longitude == 0) {
+                    ((TextView) findViewById(R.id.etLocationLong)).setText
+                            (getString(R.string.longitude_message) + finalStringLongitude);
+                    ((TextView) findViewById(R.id.etLocationLat)).setText(
+                            getString(R.string.latitude_message) + finalStringLatitude);
+
+                } else {
+                    ((TextView) findViewById(R.id.etLocationLat)).setText                               //If the device does not grant access it will display an error message in the textView
+                            (R.string.uncorrect_location_message);
+                    ((TextView) findViewById(R.id.etLocationLong)).setText                              //If the device does not grant access it will display an error message in the textView
+                            (R.string.uncorrect_location_message);
+                }
             }
         }
-    }
-
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        mSensorManager.registerListener(this, mSensorManager.getDefaultSensor               //Registers listeners to be able to update the magnetic field sensor when being inside the app
-                (Sensor.TYPE_MAGNETIC_FIELD), SensorManager.SENSOR_DELAY_GAME);                     //How fast the manager should update, set to GAME for the magnetic field sensor
-        mSensorManager.registerListener(this, mSensorManager.getDefaultSensor               //Registers listeners to be able to update the accelerometer sensor when being inside the app
-                (Sensor.TYPE_ACCELEROMETER), SensorManager.SENSOR_DELAY_UI);                        //How fast the manager should update, set to UI for the acclerometer
-
-
     }
 
     @Override
@@ -129,7 +153,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
                 //
                 Animation anim = new RotateAnimation(-currentAzimuth, -azimuth,                     //Make a new rotation object which is negative in the rotate, as it has to rotate the opposite way that you are tilting the phone
-                        Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF,    //It turens around itself in the middle of the screen at x at 0.5f and y at 0.5f
+                        Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF,     //It turens around itself in the middle of the screen at x at 0.5f and y at 0.5f
                         0.5f);
                 currentAzimuth = azimuth;                                                           //Set the currentAzimuth to azimuth value
 
@@ -145,7 +169,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         }
         TextView direction = findViewById(R.id.textView3);                                          //Defining the variable direction and reference it to textView3
         if (azimuth >= 350 || azimuth <= 10) {                                                      //Start of the if-statement, where it checks what the current rotation is
-            direction.setText(R.string.north);                                                                 //And changes the direction name according to the current rotation
+            direction.setText(R.string.north);                                                      //And changes the direction name according to the current rotation
         } else if (azimuth < 350 && azimuth > 280) {
             direction.setText(R.string.northwest);
         } else if (azimuth <= 280 && azimuth > 260) {
