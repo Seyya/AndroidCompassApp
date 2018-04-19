@@ -15,6 +15,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.animation.Animation;
 import android.view.animation.RotateAnimation;
 import android.widget.ImageView;
@@ -80,17 +81,34 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                     NETWORK_PROVIDER);
             if (location != null) {
                 double latitude = location.getLatitude();                                           //variable to store latitude
+                //Converter from latitude into degrees, minutes and seconds
+                double degreeLatitude = Math.round(latitude-1);                                     //calculation to get the decimals of latitude
+                double degreeToMinute = ((latitude - degreeLatitude) * 60);                         //Converts the decimals of latitude into minutes
+                double minuteLatitude = Math.round(degreeToMinute-1);                               //Calculation to get the decimals of minutes
+                double minuteToSeconds = ((degreeToMinute)-minuteLatitude)*60;                      //Converts the decimals of minutes into seconds
+                //Converter from longitude into degrees, minutes and seconds
                 double longitude = location.getLongitude();                                         //variable to store longitude
-                String stringLatitude = latitude + "";
-                String stringLongitude = longitude + "";
-                String finalStringLatitude = stringLatitude.substring(0, 2) + getString(R.string.degrees_symbol)
-                        + stringLatitude.substring(2, 4) + "'" + stringLatitude.substring(4, 6) + getString(R.string.quatation_mark);
-                String finalStringLongitude = stringLongitude.substring(0, 2) + getString(R.string.degrees_symbol)
-                        + stringLatitude.substring(2, 4) + "'" + stringLatitude.substring(4, 6) + getString(R.string.quatation_mark);
-                /*((TextView) findViewById(R.id.etLocationLat)).setText(
-                        getString(R.string.latitude_message) + latitude);
-                ((TextView) findViewById(R.id.etLocationLong)).setText(
-                        getString(R.string.latitude_message) + longitude);*/
+                double degreeLongitude = Math.round(longitude-1);                                   //calculation to get the decimals of longitude
+                double degreeToMinute2 = ((longitude - degreeLongitude) * 60);                      //Converts the decimals of latitude into minutes
+                double minuteLongitude = Math.round(degreeToMinute2-1);                             //Calculation to get the decimals of minutes
+                double minuteToSeconds2 = ((degreeToMinute2)-minuteLongitude)*60;                   //Converts the decimals of minutes into seconds
+
+                String stringLatitude = latitude + "";                                              //Creates a string of the latitude variable
+                String stringDegreeToMinute = degreeToMinute + "";                                  //Creates a string of the degreeToMinute variable
+                String stringMinuteToSeconds = minuteToSeconds + "";                                //Creates a string of the minuteToSeconds variable
+
+                String stringLongitude = longitude + "";                                            //Creates a string of the longitude variable
+                String stringDegreetoMinute2 = degreeToMinute2 + "";                                //Creates a string of the degreeToMinute2 variable
+                String stringminuteToSeconds2 = minuteToSeconds2 + "";                              //Creates a string of the minuteToSeconds variable
+
+                String finalStringLatitude = stringLatitude.substring(0, 2) +                       //Creates a new substring of stringLatitude, stringDegreeToMinute and minuteToSeconds
+                        getString(R.string.degrees_symbol)                                          //and only pastes certain characters from the string to display only certain numbers
+                        + stringDegreeToMinute.substring(0, 2) + "'" + stringMinuteToSeconds.       //and adds symbols for degrees, minutes and degrees.
+                        substring(0, 5) + getString(R.string.quatation_mark);
+                String finalStringLongitude = stringLongitude.substring(0, 2) +                     //Happens for longitude as well
+                        getString(R.string.degrees_symbol)
+                        + stringDegreetoMinute2.substring(0, 2) + "'" +
+                        stringminuteToSeconds2.substring(0, 5) + getString(R.string.quatation_mark);
 
                 if (latitude > 0 && latitude <= 90 && longitude > 0 && longitude <= 180) {          //setting a certain TextView with casting to a R string and the latitude variable
                     ((TextView) findViewById(R.id.etLocationLat)).setText(                          //dependent on the latitude and longitude
@@ -113,7 +131,6 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                             (getString(R.string.longitude_message) + finalStringLongitude);
                     ((TextView) findViewById(R.id.etLocationLat)).setText(
                             getString(R.string.latitude_message) + finalStringLatitude);
-
                 } else {
                     ((TextView) findViewById(R.id.etLocationLat)).setText                               //If the device does not grant access it will display an error message in the textView
                             (R.string.uncorrect_location_message);
