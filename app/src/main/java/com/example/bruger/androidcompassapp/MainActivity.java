@@ -2,6 +2,7 @@ package com.example.bruger.androidcompassapp;
 
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.hardware.Sensor;
@@ -64,6 +65,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         }
     }
 
+    @SuppressLint("SetTextI18n")
     void getLocation() {
         if ((ActivityCompat.checkSelfPermission(this, Manifest.permission.                   //if statement to check if the app has permission to use location from the mobile
                 ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) && (ActivityCompat.
@@ -81,20 +83,20 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                 double longitude = location.getLongitude();                                         //variable to store longitude
                 String stringLatitude = latitude + "";
                 String stringLongitude = longitude + "";
-                String finalStringLatitude = stringLatitude.substring(0,2) + getString(R.string.degrees_symbol)
-                        + stringLatitude.substring(2,4) + "'" + stringLatitude.substring(4,6) + getString(R.string.quatation_mark);
-                String finalStringLongitude = stringLatitude.substring(0,2) + getString(R.string.degrees_symbol)
-                        + stringLatitude.substring(2,4) + "'" + stringLatitude.substring(4,6) + getString(R.string.quatation_mark);
+                String finalStringLatitude = stringLatitude.substring(0, 2) + getString(R.string.degrees_symbol)
+                        + stringLatitude.substring(2, 4) + "'" + stringLatitude.substring(4, 6) + getString(R.string.quatation_mark);
+                String finalStringLongitude = stringLongitude.substring(0, 2) + getString(R.string.degrees_symbol)
+                        + stringLatitude.substring(2, 4) + "'" + stringLatitude.substring(4, 6) + getString(R.string.quatation_mark);
                 /*((TextView) findViewById(R.id.etLocationLat)).setText(
                         getString(R.string.latitude_message) + latitude);
                 ((TextView) findViewById(R.id.etLocationLong)).setText(
                         getString(R.string.latitude_message) + longitude);*/
 
-                if (latitude > 0 && latitude <= 90 && longitude > 0 && longitude <= 180) {
-                    ((TextView) findViewById(R.id.etLocationLat)).setText(
-                            getString(R.string.latitude_message) + getString(R.string.north) +      //setting a certain TextXiew with casting to a R string and the latitude variable
+                if (latitude > 0 && latitude <= 90 && longitude > 0 && longitude <= 180) {          //setting a certain TextView with casting to a R string and the latitude variable
+                    ((TextView) findViewById(R.id.etLocationLat)).setText(                          //dependent on the latitude and longitude
+                            getString(R.string.latitude_message) + getString(R.string.north) +
                                     finalStringLatitude);
-                    ((TextView) findViewById(R.id.etLocationLong)).setText                          //setting a certain TextView with casting to a R string and the longitude variable
+                    ((TextView) findViewById(R.id.etLocationLong)).setText
                             (getString(R.string.longitude_message) + getString(R.string.east) +
                                     finalStringLongitude);
 
@@ -128,6 +130,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         mSensorManager.unregisterListener(this);                                                    //Unregisters the listener when you are not inside the app, would waste processor power otherwise
     }
 
+    @SuppressLint("SetTextI18n")
     @Override
     public void onSensorChanged(SensorEvent sensorEvent) {
         final float alpha = 0.97f;                                                                  //Declaring and initializing the float variable alpha
